@@ -1,6 +1,7 @@
 # Imports
 from os import path
 import string
+import jiwer
 
 # Jaccard Similarity of two strings
 def jaccard_similarity(doc1, doc2):
@@ -24,7 +25,14 @@ with open(TRANSCRIPT_MANUAL) as read_file:
 manual_content = manual_content.translate(None, string.punctuation)
 
 # Compute Jaccard Similarity
+print("JACCARD SIMILARITY")
 print(jaccard_similarity(TRANSCRIPT_T2S_PATH, TRANSCRIPT_MANUAL))
+print("----------------------")
+
+print("\nWORD ERROR RATE")
+print(jiwer.wer(manual_content, t2s_content))
+print("----------------------")
+
 
 """
 TODO:
@@ -32,4 +40,5 @@ TODO:
     - compare word lists 
     - give comparasion score for evaluation
     - USE JACCARD SIMILARITY, EXPLAIN WHY -> Measure accuracy "intersection over union"
+    - USE WER to calculate accuracy of DeepSpeech model
 """

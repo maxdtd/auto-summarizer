@@ -10,6 +10,7 @@ from pydub import AudioSegment
 from pydub.silence import split_on_silence
 
 AUDIO_PATH = 'audio_files\\test.wav'
+OUT_FILE = 'hello'
 
 def chunk_on_silence(path):
     audio = AudioSegment.from_wav(path)
@@ -20,16 +21,31 @@ def chunk_on_silence(path):
     time_stamp = date_time.strftime("%d") + date_time.strftime("%m") + date_time.strftime("%Y") + date_time.strftime("%H") + date_time.strftime("%M") + date_time.strftime("%S")
     
     # Create tempoorary storage for chunks
-    tmp_dir_name = os.path.join("audio_files", f"_tmp_{time_stamp}")
-    
+    tmp_dir_name = os.path.join("audio", f"_tmp_{time_stamp}")
     os.mkdir(tmp_dir_name) 
 
+    # Recombine Chunks to have at least 40 seconds in length
+    target_length = 40000
+    output_chunks = [chunks[0]]
+    for chunk in chunks[1:]:
+        if len(output_chunks[-1]) < target_length:
+            output_chunks[-1] += chunk
+        else:
+            # if the last output chunk is longer than the target length,
+            # we can start a new one
+            output_chunks.append(chunk)
+
+    # Export recombined chunks
     i = 0
-    for chunk in chunks:
+    for chunk in output_chunks:
         chunk.export(os.path.join(tmp_dir_name, f"chunk{i}.wav"), format="wav")
         print(f"Exported chunk{i}.wav")
         i += 1
 
+    # Open output file
+    transcript = open(OUT_FILE, "a+")
+
+    # Recognize Audio and write to transcript
     for file in os.listdir(tmp_dir_name):
         filename = os.path.join(tmp_dir_name, file)
         recognizer = sr.Recognizer()
@@ -41,10 +57,11 @@ def chunk_on_silence(path):
         try:
             res = recognizer.recognize_google(listened_audio)
             print(res)
+            transcript.write(res)
         except sr.UnknownValueError:
             print("Audio is not intelligable!")
         except sr.RequestError as e:
-            print("Could not request results! Check connection!")
+            print(f"Could not request results! Check connection! Error: {e}")
 
 chunk_on_silence(AUDIO_PATH)
 
@@ -52,9 +69,6 @@ chunk_on_silence(AUDIO_PATH)
 TODO: 
     #- pocketsphinx
     #- deepspeech
-    #- wav2letter
-    #- julius speech
-    #- Kaldi ASR (pykaldi)
 
     - SpeechRecognition API to Google
     - DeepSpeech
@@ -63,7 +77,7 @@ TODO:
     - use punctuator
 
     - test results on 10 minute sample, compare results of deepspeech and google!
-    - test results on 10 minute sample lo pass, hi pass
+    - test results on 10 minute sample lo pass, hi pass, band pass
 """
 
 

@@ -5,11 +5,11 @@ from pydub import AudioSegment
 from pydub import scipy_effects
 
 # File Declaration
-MP3_FILE = "audio/test.mp3"
-WAV_FILE = "audio/test.wav"
-HP_FILE = "audio/test_hp.wav"
-LP_FILE = "audio/test_lp.wav"
-BP_FILE = "audio/test_bp.wav"
+MP3_FILE = "D:\\Projekte\\Python\\auto-summarizer\\audio\\original\\tedx_raykurzweil.mp3"
+WAV_FILE = "audio\\test.wav"
+HP_FILE = "audio\\test_hp.wav"
+LP_FILE = "audio\\test_lp.wav"
+BP_FILE = "audio\\test_bp.wav"
 
 # open MP3 file
 audio_file = AudioSegment.from_mp3(MP3_FILE)

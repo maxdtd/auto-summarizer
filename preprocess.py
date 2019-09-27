@@ -4,6 +4,7 @@ import os
 from pydub import AudioSegment
 from pydub import scipy_effects
 
+AudioSegment.ffmpeg = "D:\\Programme\\ffmpeg\\bin"
 # File Declaration
 MP3_FILE = "D:\\Projekte\\Python\\auto-summarizer\\audio\\original\\tedx_raykurzweil.mp3"
 WAV_FILE = "audio\\test.wav"
@@ -13,7 +14,6 @@ BP_FILE = "audio\\test_bp.wav"
 
 # open MP3 file
 audio_file = AudioSegment.from_mp3(MP3_FILE)
-
 # Use pydub low pass filter and export
 lp_audio = audio_file.scipy_effects.low_pass_filter(5000)
 lp_audio.export(LP_FILE, bitrate="16k", format="wav")

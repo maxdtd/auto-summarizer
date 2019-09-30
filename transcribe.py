@@ -1,32 +1,39 @@
 import warnings
 # Ignore pydub ffmpeg warning
-#warnings.filterwarnings("ignore")
-
+warnings.filterwarnings("ignore")
 import os
 
 from datetime import datetime
+
 import speech_recognition as sr 
 from pydub import AudioSegment
 from pydub.silence import split_on_silence
+import tqdm
 
-AUDIO_PATH = 'audio_files\\test.wav'
-OUT_FILE = 'hello'
+AUDIO_PATH = 'D:\\Projekte\\audio-summarizer\\res\\audio\\edited\\ray_kurzweil_original.wav'
+OUT_FILE = 'D:\\Projekte\\audio-summarizer\\res\\transcripts\\auto_transcript\\transcript.txt'
 
 def chunk_on_silence(path):
     audio = AudioSegment.from_wav(path)
     dbfs = audio.dBFS
+    print(">> chunking audio...")
     chunks = split_on_silence(audio, min_silence_len=500, silence_thresh=dbfs-16, keep_silence=500)
+    print(">> SUCCESSFULLY CHUNKED!")
+
     # Generate Timestamp
     date_time = datetime.now() #%Y%H%M%S
     time_stamp = date_time.strftime("%d") + date_time.strftime("%m") + date_time.strftime("%Y") + date_time.strftime("%H") + date_time.strftime("%M") + date_time.strftime("%S")
     
     # Create tempoorary storage for chunks
-    tmp_dir_name = os.path.join("audio", f"_tmp_{time_stamp}")
+    tmp_dir_name = os.path.join("D:\\Projekte\\audio-summarizer\\res\\audio\\edited", f"_tmp_{time_stamp}")
     os.mkdir(tmp_dir_name) 
+    print("\n>> SUCCESSFULLY CREATED TMP DIR")
 
     # Recombine Chunks to have at least 40 seconds in length
-    target_length = 40000
+    print("\n>>Recombining chunks...")
+    target_length = 5000
     output_chunks = [chunks[0]]
+    j = 0 
     for chunk in chunks[1:]:
         if len(output_chunks[-1]) < target_length:
             output_chunks[-1] += chunk
@@ -34,18 +41,23 @@ def chunk_on_silence(path):
             # if the last output chunk is longer than the target length,
             # we can start a new one
             output_chunks.append(chunk)
+        print(f">> CHUNK {j} DONE!")
+        j += 1
 
     # Export recombined chunks
+    print(">> Exporting chunks...")
     i = 0
     for chunk in output_chunks:
         chunk.export(os.path.join(tmp_dir_name, f"chunk{i}.wav"), format="wav")
-        print(f"Exported chunk{i}.wav")
+        print(f">> chunk{i}.wav DONE")
         i += 1
 
     # Open output file
     transcript = open(OUT_FILE, "a+")
 
     # Recognize Audio and write to transcript
+    print("\n>> Recognizing audio...")
+    k = 0
     for file in os.listdir(tmp_dir_name):
         filename = os.path.join(tmp_dir_name, file)
         recognizer = sr.Recognizer()
@@ -56,12 +68,13 @@ def chunk_on_silence(path):
         
         try:
             res = recognizer.recognize_google(listened_audio)
-            print(res)
-            transcript.write(res)
+            transcript.write(res + "\n")
         except sr.UnknownValueError:
             print("Audio is not intelligable!")
         except sr.RequestError as e:
             print(f"Could not request results! Check connection! Error: {e}")
+        print(f">> CHUNK {k} DONE!")
+        k += 1
 
 chunk_on_silence(AUDIO_PATH)
 

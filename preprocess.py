@@ -10,13 +10,14 @@ from pydub import scipy_effects
 # Declare path to ffmpeg
 AudioSegment.ffmpeg = "D:\\Programme\\ffmpeg\\bin"
 # File Declaration
-MP3_FILE = "D:\\Projekte\\audio-summarizer\\res\\audio\\original\\ray_kurzweil_original.mp3"
+print(os.listdir("."))
+MP3_FILE = "res\\audio\\original\\sam_harris_original.mp3"
 
-WAV_FILE = "D:\\Projekte\\audio-summarizer\\res\\audio\\edited\\wav_ray_kurzweil_16k_mono.wav"
+WAV_FILE = "res\\audio\\edited\\wav_sam_harris_16k_mono.wav"
 
-HP_FILE = "D:\\Projekte\\audio-summarizer\\res\\audio\\edited\\wav_hp_ray_kurzweil_16k_mono.wav"
-LP_FILE = "D:\\Projekte\\audio-summarizer\\res\\audio\\edited\\wav_lp_ray_kurzweil_16k_mono.wav"
-BP_FILE = "D:\\Projekte\\audio-summarizer\\res\\audio\\edited\\wav_bp_ray_kurzweil_16k_mono.wav"
+HP_FILE = "res\\audio\\edited\\wav_hp_sam_harris_16k_mono.wav"
+LP_FILE = "res\\audio\\edited\\wav_lp_sam_harris_16k_mono.wav"
+BP_FILE = "res\\audio\\edited\\wav_bp_sam_harris_16k_mono.wav"
 
 # open MP3 file
 audio_file = AudioSegment.from_mp3(MP3_FILE)

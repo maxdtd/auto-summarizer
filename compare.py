@@ -2,6 +2,7 @@
 from os import path
 import string
 import jiwer
+import sys
 
 # Jaccard Similarity of two strings
 def jaccard_similarity(doc1, doc2):
@@ -10,8 +11,8 @@ def jaccard_similarity(doc1, doc2):
     return len(intersection)/len(union)
 
 # Path declaration
-TRANSCRIPT_T2S_PATH = ""
-TRANSCRIPT_MANUAL = ""
+TRANSCRIPT_T2S_PATH = sys.argv[1]
+TRANSCRIPT_MANUAL = sys.argv[2]
 
 # Read file contents and remove punctuation
 with open(TRANSCRIPT_T2S_PATH) as read_file:
@@ -32,13 +33,3 @@ print("----------------------")
 print("\nWORD ERROR RATE")
 print(jiwer.wer(manual_content, t2s_content))
 print("----------------------")
-
-
-"""
-TODO:
-    - open both manual and api transcript
-    - compare word lists 
-    - give comparasion score for evaluation
-    - USE JACCARD SIMILARITY, EXPLAIN WHY -> Measure accuracy "intersection over union"
-    - USE WER to calculate accuracy of DeepSpeech model
-"""

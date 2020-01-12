@@ -1,1 +1,0 @@
-deepspeech --model /home/maxdtd/DeepSpeech/native_client/bin/models/output_graph.pb --alphabet /home/maxdtd/DeepSpeech/native_client/bin/models/alphabet.txt --lm /home/maxdtd/DeepSpeech/native_client/bin/models/lm.binary --trie /home/maxdtd/DeepSpeech/native_client/bin/models/trie --audio $1

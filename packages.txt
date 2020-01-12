@@ -1,5 +1,0 @@
-nltk
-spacy
-pydub
-jiwer
-SpeechRecognition

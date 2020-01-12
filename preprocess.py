@@ -3,20 +3,29 @@ warnings.filterwarnings("ignore")
 
 import os
 import subprocess
+import argparse
 
 from pydub import AudioSegment
 from pydub import scipy_effects
 
 # Declare path to ffmpeg
-AudioSegment.ffmpeg = "D:\\Programme\\ffmpeg\\bin"
+# AudioSegment.ffmpeg = "D:\\Programme\\ffmpeg\\bin"
 # File Declaration
-MP3_FILE = "..\\res\\audio\\original\\ray_kurzweil_original.mp3"
 
-WAV_FILE = "..\\res\\audio\\edited\\wav_ray_kurzweil_16k_mono.wav"
+parser = argparse.ArgumentParser(description="Use filters and create .wav for LP, HP and BP filters")
+parser.add_argument("mp3_name", type=str, help="original .mp3 file path")
+args = parser.parse_args()
 
-HP_FILE = "..\\res\\audio\\edited\\wav_hp_ray_kurzweil_16k_mono.wav"
-LP_FILE = "..\\res\\audio\\edited\\wav_lp_ray_kurzweil_16k_mono.wav"
-BP_FILE = "..\\res\\audio\\edited\\wav_bp_ray_kurzweil_16k_mono.wav"
+ORIGINAL_PATH = "res/audio/original"
+MP3_FILE = os.path.join(ORIGINAL_PATH, args.mp3_name)
+FILE_DENOMINATOR = args.mp3_name.split(".")[0]
+
+OUT_PATH = f"res/audio/edited/{FILE_DENOMINATOR}"
+WAV_FILE = os.path.join(OUT_PATH,f"{FILE_DENOMINATOR}_16k_mono.wav")
+
+HP_FILE = os.path.join(OUT_PATH,f"hp_{FILE_DENOMINATOR}_16k_mono.wav")
+LP_FILE = os.path.join(OUT_PATH,f"lp_{FILE_DENOMINATOR}_16k_mono.wav")
+BP_FILE = os.path.join(OUT_PATH,f"bp_{FILE_DENOMINATOR}_16k_mono.wav")
 
 # open MP3 file
 audio_file = AudioSegment.from_mp3(MP3_FILE)

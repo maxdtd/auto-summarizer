@@ -2,9 +2,14 @@
 import matplotlib.pyplot as plt
 from scipy.io import wavfile
 import os
+import argparse
 
-file_path = "../res/audio/edited"
-file_name = "wav_bill_gross_16k_mono.wav"
+# argparser
+parser = argparse.ArgumentParser(description="Plot audio spectrogram for .wav file")
+parser.add_argument("audio_file", type=str, help=".wav file path")
+args = parser.parse_args()
+
+file_path, file_name = os.path.split(args.audio_file)
 file_path = os.path.join(file_path, file_name)
 
 # Read the wav file (mono)
